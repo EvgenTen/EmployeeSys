@@ -1,10 +1,13 @@
 package com.evgen.springproj.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -54,6 +57,8 @@ public class EmployeeController {
 		Employee employee = employeeRepository.findById(id).orElseThrow(() -> 
 		new ResourceNotFoundException("Employee with id " + id +" not found in database"));
 		
+		System.out.println(employee.getId() + " updated");
+
 		employee.setFirstName(employeeDetails.getFirstName());
 		employee.setLastName(employeeDetails.getLastName());
 		employee.setEmailId(employeeDetails.getEmailId());
@@ -65,7 +70,20 @@ public class EmployeeController {
 		
 	}
 	
-	
+	// Delete Employee
+	@DeleteMapping("/employees/{id}")
+	public ResponseEntity<Map<String, Boolean>> deleteEmployee(@PathVariable Long id){
+		
+		Employee employee = employeeRepository.findById(id).orElseThrow(() -> 
+		new ResourceNotFoundException("Employee with id " + id +" not found in database"));
+		
+		System.out.println(employee.getFirstName() + " deleted");
+
+		employeeRepository.delete(employee);
+		Map<String, Boolean> response = new HashMap<>();
+		response.put("Deleted", true);
+		return ResponseEntity.ok(response);		
+	}
 	
 	
 	
